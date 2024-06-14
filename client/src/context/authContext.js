@@ -20,9 +20,9 @@ export const AuthProvider = ({ children }) => {
 
   // Example of checking token from localStorage on initial load
   // You may want to move this logic to useEffect in a higher-level component
-  if (!currentUser && localStorage.getItem('token')) {
+  /* if (!currentUser && localStorage.getItem('token')) {
     setCurrentUser({ username: 'exampleUser' }); // Simulating user retrieval
-  }
+  } */
 
   return (
     <AuthContext.Provider value={{ currentUser, login, logout }}>

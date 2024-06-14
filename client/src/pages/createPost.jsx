@@ -1,7 +1,7 @@
 // CreatePost.js
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../context/authContext';
+import { AuthContext } from '../components/AuthContext';
 
 const CreatePost = ({ onPostCreated }) => {
   const { currentUser } = useContext(AuthContext);
@@ -23,7 +23,7 @@ const CreatePost = ({ onPostCreated }) => {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/posts', formData);
+      const res = await axios.post('http://localhost:5000/api/postRoutes', formData);
       // Call the callback to refresh the posts on the homepage
       onPostCreated();
       // Clear form

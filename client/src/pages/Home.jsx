@@ -10,7 +10,7 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/posts${cat}`);
+      const res = await axios.get(`http://localhost:5000/api/postRoutes${cat}`);
       setPosts(res.data);
     } catch (err) {
       console.log(err);
@@ -32,7 +32,7 @@ const Home = () => {
             <div className="content">
               <h1>{post.title}</h1>
               <p>{post.desc.substring(0, 100)}...</p>
-              <Link to={`/post/${post._id}`} className="read-more">
+              <Link to={`/postRoutes/${post._id}`} className="read-more">
                 Read More
               </Link>
             </div>

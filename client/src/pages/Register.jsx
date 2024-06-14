@@ -1,17 +1,13 @@
-import React from "react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import '../styles/Register.css';
 
 const Register = () => {
   const [inputs, setInputs] = useState({
-    username: "",
-    email: "",
-    password: "",
+    username: '',
+    email: '',
+    password: '',
   });
-  const [err, setError] = useState(null);
-
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -20,43 +16,60 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/auth/register", inputs);
-      navigate("/login");
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inputs),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log('User registered:', data);
+        // Clear form inputs and error message after successful registration
+        setInputs({ username: '', email: '', password: '' });
+        setError('');
+        alert('Registration successful!');
+      } else {
+        console.error('Error registering user:', data.errors);
+        setError(data.errors[0].msg || 'Registration failed');
+      }
     } catch (err) {
-      setError(err.response.data);
+      console.error('Server error:', err);
+      setError('Server error. Please try again later.');
     }
   };
 
   return (
     <div className="auth">
       <h1>Register</h1>
-      <form>
+      {error && <div className="error">{error}</div>}
+      <form onSubmit={handleSubmit}>
         <input
-          required
           type="text"
-          placeholder="username"
+          placeholder="Username"
           name="username"
+          value={inputs.username}
           onChange={handleChange}
+          required
         />
         <input
-          required
           type="email"
-          placeholder="email"
+          placeholder="Email"
           name="email"
+          value={inputs.email}
           onChange={handleChange}
+          required
         />
         <input
-          required
           type="password"
-          placeholder="password"
+          placeholder="Password"
           name="password"
+          value={inputs.password}
           onChange={handleChange}
+          required
         />
-        <button onClick={handleSubmit}>Register</button>
-        {err && <p>{err}</p>}
-        <span>
-          Do you have an account? <Link to="/login">Login</Link>
-        </span>
+        <button type="submit">Register</button>
       </form>
     </div>
   );

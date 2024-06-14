@@ -1,0 +1,26 @@
+.menu {
+    margin: 20px 0;
+  }
+  
+  .menu h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .menu .post {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .menu .post img {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+  }
+  
+  .menu .post h2 {
+    font-size: 18px;
+    margin: 0;
+  }
+  

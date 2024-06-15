@@ -42,7 +42,7 @@ router.post('/register', async (req, res) => {
       }
     );
   } catch (err) {
-    console.error(err.message);
+    console.error('Register error:', err.message); // Improved logging
     res.status(500).send('Server error');
   }
 });
@@ -79,7 +79,7 @@ router.post('/login', async (req, res) => {
       }
     );
   } catch (err) {
-    console.error(err.message);
+    console.error('Login error:', err.message); // Improved logging
     res.status(500).send('Server error');
   }
 });

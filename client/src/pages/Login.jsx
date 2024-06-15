@@ -1,6 +1,5 @@
-// Login.js
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
 const Login = () => {
@@ -10,6 +9,7 @@ const Login = () => {
   });
 
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Use useNavigate hook
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -31,7 +31,8 @@ const Login = () => {
 
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        // Handle successful login (navigate, etc.)
+        // Navigate to home page
+        navigate('/');
         console.log('Login successful');
       } else {
         setError(data.errors[0].msg); // Display error message

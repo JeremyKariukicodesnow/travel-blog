@@ -2,7 +2,7 @@
 
 .navbar {
   overflow: visible; /* Change to visible to allow overflow */
-  background-color: rgba(126, 248, 248, 0.986);
+  background-color: rgba(152, 243, 243, 0.986);
   position: relative;
   z-index: 10; /* Ensure the navbar is on top */
   border-radius: 5px;
@@ -28,7 +28,7 @@
 .navbar .links span,
 .navbar .links .link {
   cursor: pointer;
-  color: white;
+  color: rgb(134, 134, 134);
   text-decoration: none;
 }
 
@@ -46,7 +46,7 @@
 
 .navbar .links .write:hover {
   color: teal;
-  background-color: white;
+  background-color: black;
   border: 1px solid teal;
 }
 

@@ -4,6 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const User = require('./models/User'); // Assuming your User model is in a models folder
+const notificationsRoutes = require ('./routes/notifications')
 const dotenv = require('dotenv')
 dotenv.config();
 
@@ -33,6 +34,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+app.use('/notifications', notificationsRoutes)
 
 // Profile Route
 app.post('/api/profile', upload.single('profilePicture'), async (req, res) => {

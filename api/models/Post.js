@@ -23,7 +23,8 @@ const PostSchema = new mongoose.Schema({
   cat: { type: String },
   date: { type: Date, default: Date.now },
   likes: { type: Number, default: 0 },
-  comments: [CommentSchema]
+  comments: [CommentSchema],
+  follows: [userSchema]
 });
 
 module.exports = mongoose.model('Post', PostSchema);

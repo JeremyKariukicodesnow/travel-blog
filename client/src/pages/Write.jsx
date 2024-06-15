@@ -7,8 +7,8 @@ import moment from "moment";
 
 const Write = () => {
   const state = useLocation().state;
-  const [value, setValue] = useState(state?.title || "");
-  const [title, setTitle] = useState(state?.desc || "");
+  const [value, setValue] = useState(state?.desc || "");
+  const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
 
@@ -18,7 +18,7 @@ const Write = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post(`http://localhost:5000/api/postRoutes`, formData);
+      const res = await axios.post(`http://localhost:5000/api/routes/postRoutes`, formData);
       return res.data;
     } catch (err) {
       console.log(err);
@@ -31,13 +31,13 @@ const Write = () => {
 
     try {
       state
-        ? await axios.put(`http://localhost:5000/api/postRoutes/${state.id}`, {
+        ? await axios.put(`http://localhost:5000/api/routes/routes/postRoutes/${state.id}`, {
             title,
             desc: value,
             cat,
             img: file ? imgUrl : "",
           })
-        : await axios.post(`http://localhost:5000/api/postRoutes/`, {
+        : await axios.post(`http://localhost:5000/api/routes/postRoutes/`, {
             title,
             desc: value,
             cat,
@@ -56,6 +56,7 @@ const Write = () => {
         <input
           type="text"
           placeholder="Title"
+          value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
         <div className="editorContainer">

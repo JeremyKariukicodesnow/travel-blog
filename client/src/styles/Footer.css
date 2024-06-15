@@ -1,13 +1,17 @@
 footer {
     margin-top: 100px;
     padding: 20px;
-    background-color: #b9e7e7;
+    background-color: #bbb9e7;
     display: flex;
     align-items: center;
     justify-content: space-between;
+<<<<<<< HEAD
     font-size: 12px;
     position: fixed;
     bottom: 0; 
+=======
+    font-size: 16px;
+>>>>>>> ee8f9c10a113e0efad2464dfd2bed8d72f555f56
   }
   
   footer img {

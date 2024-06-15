@@ -1,65 +1,14 @@
+// src/pages/Single.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import Edit from '../img/edit.png';
-import Delete from '../img/delete.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Menu from '../components/Menu';
 import moment from 'moment';
 import { AuthContext } from '../context/authContext';
 import DOMPurify from 'dompurify';
-
-const SinglePost = ({ post }) => {
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [followersCount, setFollowersCount] = useState(post.followers.length);
-
-  useEffect(() => {
-    // Check if current user is following the author
-    const checkFollowing = async () => {
-      try {
-        const response = await axios.get(`/api/users/check-follow/${post.authorId}`);
-        setIsFollowing(response.data.isFollowing);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    checkFollowing();
-  }, [post.authorId]);
-
-  const handleFollow = async () => {
-    try {
-      await axios.put(`/api/users/follow/${post.authorId}`);
-      setIsFollowing(true);
-      setFollowersCount((prevCount) => prevCount + 1);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleUnfollow = async () => {
-    try {
-      await axios.put(`/api/users/unfollow/${post.authorId}`);
-      setIsFollowing(false);
-      setFollowersCount((prevCount) => prevCount - 1);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  return (
-    <div className="single-post">
-      <h2>{post.title}</h2>
-      <p>{post.content}</p>
-      <p>Author: {post.author}</p>
-      <p>Followers: {followersCount}</p>
-      {isFollowing ? (
-        <button onClick={handleUnfollow}>Unfollow</button>
-      ) : (
-        <button onClick={handleFollow}>Follow</button>
-      )}
-    </div>
-  );
-};
+import Menu from '../components/Menu';
+import SinglePost from '../components/SinglePost';
+import Edit from '../img/edit.png'
+import Delete from '../img/delete.png'
 
 const Single = () => {
   const [post, setPost] = useState({});
@@ -70,13 +19,12 @@ const Single = () => {
   const navigate = useNavigate();
 
   const postId = location.pathname.split('/')[2];
-
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/api/posts/${postId}`);
+        const res = await axios.get(`/api/postRoutes/${postId}`);
         setPost(res.data);
         setComments(res.data.comments);
       } catch (err) {
@@ -88,7 +36,9 @@ const Single = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/posts/${postId}`);
+      await axios.delete(`/api/postRoutes/${postId}`, {
+        headers: { Authorization: `Bearer ${currentUser.token}` }
+      });
       navigate('/');
     } catch (err) {
       console.log(err);
@@ -97,7 +47,9 @@ const Single = () => {
 
   const handleLike = async () => {
     try {
-      const res = await axios.put(`/api/posts/like/${postId}`);
+      const res = await axios.put(`/api/postRoutes/like/${postId}`, {}, {
+        headers: { Authorization: `Bearer ${currentUser.token}` }
+      });
       setPost(res.data);
     } catch (err) {
       console.log(err);
@@ -107,9 +59,11 @@ const Single = () => {
   const handleComment = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`/api/posts/comment/${postId}`, {
+      const res = await axios.post(`/api/postRoutes/comment/${postId}`, {
         username: currentUser.username,
         text: comment,
+      }, {
+        headers: { Authorization: `Bearer ${currentUser.token}` }
       });
       setComments(res.data.comments);
       setComment('');
@@ -173,8 +127,9 @@ const Single = () => {
         </div>
       </div>
       <Menu cat={post.cat} />
+      <SinglePost post={post} />
     </div>
   );
 };
 
-export { Single, SinglePost };
+export default Single;

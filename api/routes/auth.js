@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const dotenv = require('dotenv');
+const { verifyToken } = require('../middleware/auth'); // Updated middleware import
 
 dotenv.config();
 
@@ -65,7 +66,7 @@ router.post('/login', async (req, res) => {
     const payload = {
       user: {
         id: user.id,
-        username: user.username, // Include username in payload
+        username: user.username,
       },
     };
 
@@ -81,6 +82,19 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error('Login error:', err.message); // Improved logging
     res.status(500).send('Server error');
+  }
+});
+
+// Get current user
+router.get('/me', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id); // Assuming the token middleware adds user.id to req
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
   }
 });
 

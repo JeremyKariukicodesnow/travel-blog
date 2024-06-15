@@ -1,59 +1,59 @@
-// server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const postRoutes = require('./routes/postRoutes');
-const auth = require('./routes/auth')
+const multer = require('multer');
 const path = require('path');
-
+const { v4: uuidv4 } = require('uuid');
+const User = require('./models/User'); // Assuming your User model is in a models folder
+const notificationsRoutes = require ('./routes/notifications')
+const dotenv = require('dotenv')
 dotenv.config();
 
+
 const app = express();
-
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-}));
-app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-app.use('/api/posts', postRoutes);
-app.use('/api/auth', auth);
-
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log('MongoDB connection error:', err));
-
-const users = [
-    { id: 1, username: 'testuser', password: 'password' },
-  ];
-  
-  const posts = [];
-  
-  
-  app.post('/api/posts', authenticateToken, (req, res) => {
-    const { title, desc, cat, img, date } = req.body;
-    const post = { id: posts.length + 1, title, desc, cat, img, username: req.user.username, date };
-    posts.push(post);
-    res.status(201).json(post);
-  });
-  
-  function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-  
-    if (!token) return res.sendStatus(401);
-  
-    jwt.verify(token, 'your_jwt_secret', (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user;
-      next();
-    });
-  }
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Middleware
+app.use(express.json());
+
+// MongoDB Setup
+mongoose.connect(process.env.MONGO_URI);
+  mongoose.connection.on('connected', () => {
+    console.log('Connected to MongoDB');
+    });
+    mongoose.connection.on('error', (err) => {
+      console.log('Error connecting to MongoDB:', err);
+      });
+// Multer Setup for Image Uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, uuidv4() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
+
+app.use('/notifications', notificationsRoutes)
+
+// Profile Route
+app.post('/api/profile', upload.single('profilePicture'), async (req, res) => {
+  try {
+    const { username, bio } = req.body;
+    const newUser = new User({
+      username,
+      bio,
+      profilePicture: req.file.path,
+    });
+    await newUser.save();
+    res.status(201).send(newUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

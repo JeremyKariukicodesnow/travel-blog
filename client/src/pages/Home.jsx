@@ -35,19 +35,9 @@ const Home = () => {
     },
   ]);
 
-<<<<<<< HEAD
   const handleLike = (id) => {
     console.log(`Liked post with ID: ${id}`);
     // This is a placeholder function. Add logic to handle liking a post.
-=======
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(`http://localhost:5000/api/postRoutes${cat}`);
-      setPosts(res.data);
-    } catch (err) {
-      console.log(err);
-    }
->>>>>>> ee8f9c10a113e0efad2464dfd2bed8d72f555f56
   };
 
   const handleDelete = (id) => {
@@ -69,7 +59,6 @@ const Home = () => {
             <div className="content">
               <h1>{post.title}</h1>
               <p>{post.desc.substring(0, 100)}...</p>
-<<<<<<< HEAD
               <div className="tags">
                 {post.cat && <span className="tag">{post.cat}</span>}
               </div>
@@ -83,11 +72,6 @@ const Home = () => {
                   </>
                 )}
               </div>
-=======
-              <Link to={`/postRoutes/${post._id}`} className="read-more">
-                Read More
-              </Link>
->>>>>>> ee8f9c10a113e0efad2464dfd2bed8d72f555f56
             </div>
           </div>
         ))}
